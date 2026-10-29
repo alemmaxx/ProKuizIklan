@@ -5,159 +5,201 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pusat Iklan ProKuiz</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Baloo+2:wght@600;800&family=Nunito+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout: streaming-style — cinematic hero, horizontal rails of idea tiles, control desk below; stacks on phone */
+/* Layout: corporate console — navy page header with live summary, template cards, two-column composer/output, then studio */
 :root{
-  --bg:#111111; --panel:#1b1b1b; --panel2:#262626; --line:#303030;
-  --fg:#ffffff; --muted:#b3b3b3; --gold:#e50914; --gold-ink:#ffffff;
-  --tv:"Bebas Neue","Arial Narrow",Impact,sans-serif;
-  --red:#ff5a6a; --green:#35d39a;
-  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
-  --body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  color-scheme:dark;
+  --bg:#f3f5f9; --surface:#ffffff; --surface2:#f7f9fc; --line:#e2e7ef; --line2:#cfd7e4;
+  --ink:#0f1b33; --muted:#5d6a82; --navy:#0d2550; --navy2:#16346d;
+  --accent:#1f5fd6; --accent-ink:#ffffff; --accent-soft:#e8f0fd;
+  --gold:#f2b40a; --ok:#14804a; --ok-soft:#e6f4ec; --err:#c4314b;
+  --shadow:0 1px 2px rgba(15,27,51,.06),0 4px 16px rgba(15,27,51,.06);
+  --font:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  /* legacy names used by script */
+  --fg:var(--ink); --panel:var(--surface); --panel2:var(--surface2); --red:var(--err); --green:var(--ok);
 }
-body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
-.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{font-family:var(--tv);font-size:44px;line-height:1;color:var(--gold);letter-spacing:.02em}
-h1{font-family:var(--tv);font-weight:400;font-size:clamp(26px,4vw,34px);letter-spacing:.04em;line-height:1;margin:0;text-wrap:balance}
-h1 small{display:block;font-family:var(--body);font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-top:6px}
-.links{display:flex;flex-wrap:wrap;gap:8px}
-.links a{color:#e5e5e5;text-decoration:none;font-size:13.5px;font-weight:600;padding:6px 4px;margin-right:10px}
-.links a:hover,.links a:focus-visible{color:var(--muted);outline:none;text-decoration:underline}
-.hero{position:relative;border-radius:6px;overflow:hidden;padding:clamp(28px,6vw,64px) clamp(20px,5vw,56px);min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;
-  background:radial-gradient(120% 90% at 85% 10%,rgba(229,9,20,.55),transparent 55%),radial-gradient(80% 80% at 10% 100%,rgba(229,9,20,.18),transparent 60%),linear-gradient(180deg,#2a0507 0%,#111 100%)}
-.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(180deg,transparent,var(--bg));pointer-events:none}
-.hero>*{position:relative;z-index:1}
-.hero .tag{display:flex;align-items:center;gap:8px;font-weight:800;font-size:12px;letter-spacing:.25em;color:#e5e5e5}
-.hero .tag b{font-family:var(--tv);font-size:26px;letter-spacing:.04em;color:var(--gold)}
-.hero h2{font-family:var(--tv);font-weight:400;font-size:clamp(46px,9vw,96px);line-height:.92;letter-spacing:.02em;margin:0;max-width:12ch;text-wrap:balance}
-.hero p{max-width:52ch;color:#e5e5e5;font-size:clamp(14px,1.8vw,17px);margin:0}
-.hero .meta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:13px;color:var(--muted)}
-.hero .meta .m{color:#46d369;font-weight:800}
-.hero .meta .box{border:1px solid #777;padding:0 6px;color:#e5e5e5}
-.hbtns{display:flex;flex-wrap:wrap;gap:10px}
-.hbtn{font:800 16px var(--body);border:0;border-radius:4px;padding:10px 22px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
-.hbtn.play{background:#fff;color:#000}.hbtn.play:hover{background:rgba(255,255,255,.75)}
-.hbtn.info{background:rgba(109,109,110,.7);color:#fff}.hbtn.info:hover{background:rgba(109,109,110,.45)}
-.rail-title{font-family:var(--body);font-weight:800;font-size:19px;margin:0}
-.grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:18px;align-items:start}
-@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
-.label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1220; --surface:#121b2d; --surface2:#17223a; --line:#223150; --line2:#2d3f63;
+  --ink:#e8eefb; --muted:#9aa8c3; --navy:#0a1a3a; --navy2:#12285a;
+  --accent:#5b8cf0; --accent-ink:#0b1220; --accent-soft:#1a2b52; --ok:#3cc283; --ok-soft:#123326; --err:#ff6b81;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1220; --surface:#121b2d; --surface2:#17223a; --line:#223150; --line2:#2d3f63;
+  --ink:#e8eefb; --muted:#9aa8c3; --navy:#0a1a3a; --navy2:#12285a;
+  --accent:#5b8cf0; --accent-ink:#0b1220; --accent-soft:#1a2b52; --ok:#3cc283; --ok-soft:#123326; --err:#ff6b81;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14.5px;line-height:1.55;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.in{max-width:1200px;margin:0 auto}
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar .in{display:flex;align-items:center;gap:20px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.mark{width:34px;height:34px;border-radius:8px;background:var(--navy);color:var(--gold);display:grid;place-items:center;font-weight:800;font-size:14px;letter-spacing:.02em}
+.brand b{font-weight:800;font-size:15.5px;line-height:1.1;display:block}
+.brand .bt span{font-size:12px;color:var(--muted);display:block}
+.nav{display:flex;gap:4px;margin-left:auto}
+.nav a{color:var(--muted);text-decoration:none;font-weight:600;font-size:13.5px;padding:8px 12px;border-radius:8px}
+.nav a:hover,.nav a:focus-visible{background:var(--surface2);color:var(--ink);outline:none}
+@media (max-width:640px){.nav{display:none}}
+/* page header */
+.phead{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding-block:36px 72px}
+.crumb{font-size:12.5px;color:rgba(255,255,255,.65);font-weight:600;letter-spacing:.02em}
+.phead h1{font-size:clamp(26px,4vw,34px);font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;text-wrap:balance}
+.phead p{margin:0;max-width:62ch;color:rgba(255,255,255,.8)}
+.phead .hb{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.btn-w{background:#fff;color:var(--navy);font:700 14px var(--font);padding:10px 18px;border-radius:8px;text-decoration:none;border:0}
+.btn-g{background:rgba(255,255,255,.12);color:#fff;font:700 14px var(--font);padding:10px 18px;border-radius:8px;text-decoration:none;border:1px solid rgba(255,255,255,.25)}
+.btn-w:hover{background:#eef3ff}.btn-g:hover{background:rgba(255,255,255,.2)}
+/* stats overlap */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:-44px}
+@media (max-width:860px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);min-width:0}
+.stat .k{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.stat .v{font-size:26px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:4px}
+.stat .s{font-size:12.5px;color:var(--muted)}
+main.in{display:flex;flex-direction:column;gap:28px;padding-block:28px 56px}
+.sec-h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.sec-h h2{font-size:18px;font-weight:800;letter-spacing:-.01em;margin:0}
+.sec-h p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+/* templates */
+.ideas{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+@media (max-width:1000px){.ideas{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.ideas{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}.idea{flex:0 0 72%;scroll-snap-align:start}}
+.idea{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;font-weight:700;font-size:14px;line-height:1.35;color:var(--ink);transition:border-color .15s,box-shadow .15s,transform .15s}
+.idea::before{content:attr(data-tag);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);align-self:flex-start;padding:3px 8px;border-radius:6px}
+.idea::after{content:"Guna templat →";margin-top:auto;font-size:12.5px;font-weight:700;color:var(--muted)}
+.idea:hover,.idea:focus-visible{border-color:var(--accent);box-shadow:var(--shadow);transform:translateY(-2px);outline:none}
+.idea:hover::after{color:var(--accent)}
+/* cards */
+.grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:20px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:22px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.card-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.card-h h2,.card-h h3{font-size:16px;font-weight:800;margin:0}
+.card-h p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
 .field{display:flex;flex-direction:column;gap:8px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{font:600 13px var(--body);color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer}
-.chip[aria-pressed="true"]{background:#fff;color:#000;border-color:#fff}
-.chip:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-textarea{font:15px/1.5 var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:110px;resize:vertical;width:100%;box-sizing:border-box}
-.ideas{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 12px;scrollbar-width:thin}
-.idea{all:unset;box-sizing:border-box;cursor:pointer;flex:0 0 min(200px,62%);aspect-ratio:16/9;scroll-snap-align:start;border-radius:4px;padding:12px;display:flex;align-items:flex-end;font-weight:800;font-size:14px;line-height:1.25;color:#fff;
-  background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.85)),var(--tile,linear-gradient(135deg,#7a0a10,#1f1f1f));transition:transform .2s}
-.idea:nth-child(2){--tile:linear-gradient(135deg,#0d3b66,#1f1f1f)}.idea:nth-child(3){--tile:linear-gradient(135deg,#5b2a86,#1f1f1f)}
-.idea:nth-child(4){--tile:linear-gradient(135deg,#0f5e3e,#1f1f1f)}.idea:nth-child(5){--tile:linear-gradient(135deg,#8a4b08,#1f1f1f)}
-.idea:hover,.idea:focus-visible{transform:scale(1.05);outline:2px solid #fff;outline-offset:0}
-.go{font:800 17px var(--body);background:var(--gold);color:var(--gold-ink);border:0;border-radius:4px;padding:12px 18px;cursor:pointer}
-.go[disabled]{opacity:.55;cursor:wait}
+.chip{font:600 13px var(--font);color:var(--ink);background:var(--surface);border:1px solid var(--line2);border-radius:8px;padding:7px 12px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+textarea,.inp{font:14.5px/1.5 var(--font);color:var(--ink);background:var(--surface);border:1px solid var(--line2);border-radius:8px;padding:10px 12px;width:100%}
+textarea{min-height:120px;resize:vertical}
+textarea:focus,.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);outline:none}
+.go{font:700 14.5px var(--font);background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:11px 18px;cursor:pointer}
+.go:hover{filter:brightness(1.08)}
+.go[disabled]{opacity:.5;cursor:not-allowed}
 .out-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.out-head h2{font-family:var(--body);font-weight:800;font-size:20px;margin:0}
-.status{font-size:12.5px;color:var(--muted)}
-.status.err{color:var(--red)}
-.output{background:#0a0a0a;border:1px solid var(--line);border-radius:4px;padding:16px;min-height:260px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;font-size:15px;line-height:1.6}
+.out-head h2{font-size:16px;font-weight:800;margin:0}
+.status{font-size:12.5px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.status.err{color:var(--err)}.status.err::before{background:var(--err)}
+.output{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:18px;min-height:280px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14.5px;line-height:1.65}
 .output.example{color:var(--muted)}
 .actions{display:flex;flex-wrap:wrap;gap:8px}
-.act{font:700 13.5px var(--body);color:var(--fg);background:rgba(109,109,110,.45);border:0;border-radius:4px;padding:9px 13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-.act:hover{background:rgba(109,109,110,.75)}
-.act.wa{background:#1f7a46}.act.wa:hover{background:#25985a}
+.act{font:600 13.5px var(--font);color:var(--ink);background:var(--surface);border:1px solid var(--line2);border-radius:8px;padding:8px 13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.act:hover{border-color:var(--accent);color:var(--accent)}
+.act.wa{color:var(--ok);border-color:var(--ok);background:var(--ok-soft)}
 .hint{font-size:12.5px;color:var(--muted);margin:0}
-.lower{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:18px}
-@media (max-width:860px){.lower{grid-template-columns:minmax(0,1fr)}}
-.check{display:flex;flex-direction:column;gap:8px}
-.check label{display:flex;gap:10px;align-items:center;cursor:pointer}
-.check input{accent-color:var(--gold);width:18px;height:18px}
-.hist{display:flex;gap:10px;overflow-x:auto;padding:6px 2px 12px;scroll-snap-type:x mandatory}
-.hitem{all:unset;box-sizing:border-box;cursor:pointer;flex:0 0 min(220px,70%);aspect-ratio:16/9;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;padding:12px;border-radius:4px;
-  background:linear-gradient(180deg,transparent 20%,rgba(0,0,0,.9)),linear-gradient(135deg,#4a0a0e,#262626);transition:transform .2s}
-.hitem:hover,.hitem:focus-visible{transform:scale(1.05);outline:2px solid #fff}
-.hitem b{font-size:13.5px}
-.hitem span{font-size:12px;color:var(--muted)}
-.empty{font-size:13px;color:var(--muted)}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#fff;color:#000;font-weight:700;padding:10px 16px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none}
+.lower{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:20px;align-items:start}
+@media (max-width:900px){.lower{grid-template-columns:minmax(0,1fr)}}
+.check{display:flex;flex-direction:column}
+.check label{display:flex;gap:12px;align-items:center;cursor:pointer;padding:11px 0;border-bottom:1px solid var(--line)}
+.check label:last-child{border-bottom:0}
+.check input{accent-color:var(--accent);width:18px;height:18px}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.hist{display:flex;flex-direction:column;max-height:330px;overflow:auto}
+.hitem{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:11px 12px;border-radius:8px}
+.hitem:hover,.hitem:focus-visible{background:var(--surface2)}
+.hitem+.hitem{border-top:1px solid var(--line)}
+.hitem b{font-size:13.5px;font-weight:700}
+.hitem span{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{font-size:13px;color:var(--muted);margin:0;padding:12px 0}
+details.panel summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:15px}
+details.panel summary::after{content:"▾";color:var(--muted)}
+details[open].panel summary::after{content:"▴"}
+.keyrow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px}
+@media (max-width:480px){.keyrow{grid-template-columns:minmax(0,1fr)}}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);font-weight:700;font-size:13.5px;padding:10px 16px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:40}
 .toast.on{opacity:1}
-@media (prefers-reduced-motion:reduce){.toast,.idea,.hitem{transition:none}.idea:hover,.hitem:hover{transform:none}}
-/* Pembuat Video */
-.vgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:18px;align-items:start}
-@media (max-width:860px){.vgrid{grid-template-columns:minmax(0,1fr)}}
-.vsec-title{font-family:var(--tv);font-weight:400;letter-spacing:.04em;font-size:34px;margin:0}
-.stage{display:flex;flex-direction:column;align-items:center;gap:10px}
-#vcanvas{width:100%;max-width:320px;aspect-ratio:9/16;background:#000;border-radius:6px;box-shadow:0 20px 60px rgba(229,9,20,.25);border:1px solid var(--line)}
-.steps{display:flex;flex-direction:column;gap:14px}
-.step{display:flex;flex-direction:column;gap:8px}
-.step h3{font-family:var(--body);font-weight:800;font-size:16px;margin:0;display:flex;gap:8px;align-items:center}
-.step h3 .n{width:24px;height:24px;border-radius:50%;background:var(--gold);color:var(--gold-ink);display:grid;place-items:center;font-size:13px}
-.filebtn{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
-.filebtn input{font:13px var(--body);color:var(--fg);max-width:100%}
-.inp{font:14px var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:100%;box-sizing:border-box}
-.inp:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+/* studio */
+.vgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:28px;align-items:start}
+@media (max-width:900px){.vgrid{grid-template-columns:minmax(0,1fr)}}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;flex-direction:column;gap:10px;padding:0 0 22px 44px;position:relative}
+.step::before{content:"";position:absolute;left:15px;top:32px;bottom:4px;width:2px;background:var(--line)}
+.step:last-child::before{display:none}
+.step h3{font-size:15px;font-weight:800;margin:0;display:flex;align-items:center;min-height:32px}
+.step h3 .n{position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:13.5px;font-weight:800;border:1px solid var(--accent)}
+.filebtn{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted);font-weight:600}
+.filebtn input{font:13px var(--font);color:var(--ink);max-width:100%;padding:10px;border:1px dashed var(--line2);border-radius:8px;background:var(--surface2)}
 .segs{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto}
-.seg{display:grid;grid-template-columns:62px 62px minmax(0,1fr) 32px;gap:6px;align-items:center}
-.seg .inp{padding:6px 8px;font-variant-numeric:tabular-nums}
+.seg,.seghead{display:grid;grid-template-columns:70px 70px minmax(0,1fr) 30px;gap:8px;align-items:center}
+.seghead{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.seg .inp{padding:7px 9px;font-variant-numeric:tabular-nums}
 .seg .del{all:unset;cursor:pointer;text-align:center;color:var(--muted);font-size:18px}
-.seg .del:hover{color:var(--red)}
-.seghead{display:grid;grid-template-columns:62px 62px minmax(0,1fr) 32px;gap:6px;font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.vol{display:grid;grid-template-columns:110px minmax(0,1fr) 40px;gap:8px;align-items:center;font-size:13px}
-.vol input{accent-color:var(--gold);width:100%}
-.vol output{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
-.progress{height:6px;background:var(--panel2);border-radius:99px;overflow:hidden;width:100%;max-width:320px}
-.progress i{display:block;height:100%;width:0;background:var(--gold)}
-#vresult{width:100%;max-width:320px;border-radius:14px}
+.seg .del:hover{color:var(--err)}
+.vol{display:grid;grid-template-columns:120px minmax(0,1fr) 44px;gap:10px;align-items:center;font-size:13px}
+.vol input{accent-color:var(--accent);width:100%}
+.vol output{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12.5px;text-align:right}
+.stage{display:flex;flex-direction:column;align-items:center;gap:12px;position:sticky;top:76px}
+.phone{background:#0f1b33;padding:10px;border-radius:30px;box-shadow:0 18px 40px rgba(15,27,51,.25);width:100%;max-width:300px}
+#vcanvas{display:block;width:100%;aspect-ratio:9/16;background:#000;border-radius:22px}
+.progress{height:4px;background:var(--line);border-radius:99px;overflow:hidden;width:100%;max-width:300px}
+.progress i{display:block;height:100%;width:0;background:var(--accent)}
+#vresult{width:100%;max-width:300px;border-radius:12px}
 .vhidden{position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0;pointer-events:none}
+footer{color:var(--muted);font-size:12.5px;padding-block:0 32px}
+@media (prefers-reduced-motion:reduce){.toast,.idea{transition:none}.idea:hover{transform:none}}
 </style>
+
 </head>
 <body>
+<div class="topbar gut"><div class="in">
+  <a class="brand" href="#top"><span class="mark">PK</span><span class="bt"><b>ProKuiz</b><span>Pusat Iklan</span></span></a>
+  <nav class="nav" aria-label="Bahagian"><a href="#konten">Konten</a><a href="#video">Studio video</a><a href="#sejarah">Sejarah</a><a href="#platform">Platform</a></nav>
+</div></div>
 
-<div class="wrap">
-  <header>
-    <div class="brand">
-      <div class="logo">PK</div>
-      <h1>Pusat Iklan<small>ProKuiz · ProKuiz School</small></h1>
+<header class="phead gut" id="top"><div class="in">
+  <div class="crumb">ProKuiz · Pemasaran</div>
+  <h1>Pusat Iklan ProKuiz</h1>
+  <p>Hasilkan skrip, caption dan video promosi untuk ProKuiz dan ProKuiz School, kemudian terbitkan ke TikTok, Facebook, Instagram dan WhatsApp.</p>
+  <div class="hb"><a class="btn-w" href="#konten">Jana konten</a><a class="btn-g" href="#video">Buka studio video</a></div>
+</div></header>
+
+<div class="gut"><div class="in stats" aria-label="Ringkasan">
+  <div class="stat"><div class="k">Konten hari ini</div><div class="v" id="st-today">0</div><div class="s">dijana di peranti ini</div></div>
+  <div class="stat"><div class="k">Jumlah konten</div><div class="v" id="st-total">0</div><div class="s">30 terakhir disimpan</div></div>
+  <div class="stat"><div class="k">Senarai semak</div><div class="v" id="st-check">0/5</div><div class="s">tugasan hari ini</div></div>
+  <div class="stat"><div class="k">Produk</div><div class="v">2 + 4</div><div class="s">web app · app Android</div></div>
+</div></div>
+
+<div class="gut"><main class="in">
+  <section aria-labelledby="t-tpl">
+    <div class="sec-h"><div><h2 id="t-tpl">Templat pantas</h2><p>Pilih templat untuk isi permintaan secara automatik.</p></div></div>
+    <div class="ideas" id="ideas">
+      <button class="idea" data-tag="Harian">Konten untuk hari ini, ikut musim persekolahan semasa</button>
+      <button class="idea" data-tag="Customer">Customer tanya "berapa harga dan macam mana bayar?"</button>
+      <button class="idea" data-tag="Promosi">Promosi percubaan percuma 2 hari ProKuiz School</button>
+      <button class="idea" data-tag="Kempen">Liga Negeri: cabar ibu bapa negeri lain</button>
+      <button class="idea" data-tag="ProKuiz">Arcade ProF1 sebagai ganjaran lepas belajar</button>
     </div>
-    <nav class="links" aria-label="Pautan pantas">
-      <a href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">TikTok Studio</a>
-      <a href="https://business.facebook.com/latest/home" target="_blank" rel="noopener">Meta Business Suite</a>
-      <a href="https://seller.shopee.com.my/" target="_blank" rel="noopener">Shopee Seller</a>
-      <a href="https://toyyibpay.com/" target="_blank" rel="noopener">ToyyibPay</a>
-      <a href="https://prokuiz.web.app" target="_blank" rel="noopener">prokuiz.web.app</a>
-      <a href="https://prokuizschool.web.app" target="_blank" rel="noopener">prokuizschool.web.app</a>
-    </nav>
-  </header>
-
-  <section class="hero" aria-label="Pengenalan">
-    <span class="tag"><b>PK</b> STUDIO IKLAN</span>
-    <h2>Iklan ProKuiz Hari Ini</h2>
-    <div class="meta"><span class="m">Tahun 1 – Tingkatan 5</span><span class="box">BM | EN</span><span>TikTok · Facebook · Instagram · WhatsApp</span></div>
-    <p>Pilih produk, minta Claude tulis skrip dan caption, kemudian salin terus ke platform. Atau buat video TikTok siap dengan sari kata dan suara anda.</p>
-    <div class="hbtns"><a class="hbtn play" href="#req">▶ Jana konten</a><a class="hbtn info" href="#video">🎬 Buat video</a></div>
   </section>
-  <h3 class="rail-title">Idea popular untuk anda</h3>
-  <div class="ideas" id="ideas">
-          <button class="idea">Konten untuk hari ini, ikut musim persekolahan semasa</button>
-          <button class="idea">Customer tanya "berapa harga dan macam mana bayar?"</button>
-          <button class="idea">Promosi percubaan percuma 2 hari ProKuiz School</button>
-          <button class="idea">Liga Negeri: cabar ibu bapa negeri lain</button>
-          <button class="idea">Arcade ProF1 sebagai ganjaran lepas belajar</button>
-        </div>
-  <details class="panel" id="setpanel">
-    <summary class="label" style="cursor:pointer">⚙️ Tetapan Claude (kunci API)</summary>
-    <p class="hint">Website ini guna Claude melalui kunci API Anthropic anda sendiri. Dapatkan kunci di console.anthropic.com (bayaran ikut penggunaan, berasingan daripada langganan Claude). Kunci hanya disimpan dalam pelayar peranti ini, tidak dihantar ke mana-mana selain Anthropic. Jangan kongsi peranti ini atau link yang mengandungi kunci.</p>
-    <div class="vol" style="grid-template-columns:minmax(0,1fr) auto auto"><input class="inp" id="apikey" type="password" placeholder="sk-ant-..." autocomplete="off"><button class="act" id="savekey">Simpan</button><button class="act" id="delkey">Padam</button></div>
+
+    <details class="panel" id="setpanel">
+    <summary>Tetapan Claude (kunci API)</summary>
+    <p class="hint">Website ini guna Claude melalui kunci API Anthropic anda sendiri. Dapatkan kunci di console.anthropic.com (bayaran ikut penggunaan, berasingan daripada langganan Claude). Kunci hanya disimpan dalam pelayar peranti ini dan hanya dihantar kepada Anthropic.</p>
+    <div class="keyrow"><input class="inp" id="apikey" type="password" placeholder="sk-ant-..." autocomplete="off"><button class="act" id="savekey">Simpan kunci</button><button class="act" id="delkey">Padam</button></div>
     <span class="status" id="keystatus"></span>
   </details>
-  <div class="grid">
+
+  <div class="grid" id="konten">
     <section class="panel" aria-label="Permintaan">
+      <div class="card-h"><div><h2>Permintaan baharu</h2><p>Tetapkan produk, saluran dan arahan.</p></div></div>
       <div class="field">
         <span class="label">Produk</span>
         <div class="chips" id="prod">
@@ -168,7 +210,7 @@ textarea{font:15px/1.5 var(--body);color:var(--fg);background:var(--bg);border:1
         </div>
       </div>
       <div class="field">
-        <span class="label">Jenis konten</span>
+        <span class="label">Saluran</span>
         <div class="chips" id="fmt">
           <button class="chip" aria-pressed="true" data-v="Skrip video TikTok">TikTok</button>
           <button class="chip" aria-pressed="false" data-v="Post Facebook">Facebook</button>
@@ -179,20 +221,18 @@ textarea{font:15px/1.5 var(--body);color:var(--fg);background:var(--bg);border:1
         </div>
       </div>
       <div class="field">
-        <label class="label" for="req">Apa yang anda nak?</label>
+        <label class="label" for="req">Arahan</label>
         <textarea id="req" placeholder="Contoh: buat 3 skrip TikTok tentang Cabaran Harian untuk musim cuti sekolah"></textarea>
       </div>
       <button class="go" id="go">Jana konten</button>
     </section>
 
     <section class="panel" aria-label="Hasil">
-      <div class="out-head">
-        <h2>Hasil</h2>
-        <span class="status" id="status">Contoh di bawah. Tekan "Jana konten" untuk hasil sebenar.</span>
-      </div>
+      <div class="card-h out-head"><div><h2>Hasil</h2><p>Semak, salin dan terbitkan.</p></div>
+        <span class="status" id="status">Contoh dipaparkan</span></div>
       <div class="output example" id="out">CONTOH (bukan hasil sebenar)
 
-🎬 Hook: "Anak awak boleh jawab 5 soalan ni dalam 2 minit 30 saat?"
+Hook: "Anak awak boleh jawab 5 soalan ni dalam 2 minit 30 saat?"
 
 Rakam:
 1. Buka ProKuiz School, tekan Cabaran Harian
@@ -200,42 +240,40 @@ Rakam:
 3. Tunjuk markah dan kedudukan Top 50
 
 Caption:
-Cabaran Harian ProKuiz School ✨ 5 soalan, sekali sehari. Cuba percuma 2 hari, link di bio!
+Cabaran Harian ProKuiz School. 5 soalan, sekali sehari. Cuba percuma 2 hari, link di bio!
 
 #ibubapa #belajarsambilbermain #tahun6 #prokuiz</div>
       <div class="actions">
-        <button class="act" id="copy">📋 Salin</button>
-        <a class="act" data-open="https://www.facebook.com/" href="https://www.facebook.com/" target="_blank" rel="noopener">Salin + buka FB</a>
-        <a class="act" data-open="https://www.tiktok.com/tiktokstudio/upload" href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">Salin + buka TikTok</a>
-        <a class="act" data-open="https://www.instagram.com/" href="https://www.instagram.com/" target="_blank" rel="noopener">Salin + buka IG</a>
+        <button class="act" id="copy">Salin teks</button>
+        <a class="act" data-open="https://www.facebook.com/" href="https://www.facebook.com/" target="_blank" rel="noopener">Salin + Facebook</a>
+        <a class="act" data-open="https://www.tiktok.com/tiktokstudio/upload" href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">Salin + TikTok</a>
+        <a class="act" data-open="https://www.instagram.com/" href="https://www.instagram.com/" target="_blank" rel="noopener">Salin + Instagram</a>
         <a class="act wa" id="wa" href="https://wa.me/" target="_blank" rel="noopener">Kongsi WhatsApp</a>
       </div>
-      <p class="hint">FB, TikTok dan IG tak terima teks daripada website lain. Teks akan disalin dahulu, jadi tekan lama di kotak post dan pilih Tampal.</p>
+      <p class="hint">Facebook, TikTok dan Instagram tidak menerima teks daripada website lain. Teks disalin dahulu; tampal di kotak post.</p>
     </section>
   </div>
 
-  <div class="lower">
+  <div class="lower" id="sejarah">
     <section class="panel" aria-label="Senarai semak hari ini">
-      <span class="label">Senarai semak hari ini</span>
+      <div class="card-h"><div><h3>Senarai semak hari ini</h3><p>Bermula semula setiap hari.</p></div></div>
       <div class="check" id="check">
-        <label><input type="checkbox" id="c1"> Post 1 video TikTok</label>
-        <label><input type="checkbox" id="c2"> Post di 2 group FB ibu bapa</label>
-        <label><input type="checkbox" id="c3"> Story IG / WhatsApp</label>
-        <label><input type="checkbox" id="c4"> Balas semua inbox dan komen</label>
-        <label><input type="checkbox" id="c5"> Semak video mana paling banyak view</label>
+        <label><input type="checkbox" id="c1"><span>Post 1 video TikTok</span></label>
+        <label><input type="checkbox" id="c2"><span>Post di 2 group FB ibu bapa</span></label>
+        <label><input type="checkbox" id="c3"><span>Story Instagram / WhatsApp</span></label>
+        <label><input type="checkbox" id="c4"><span>Balas semua inbox dan komen</span></label>
+        <label><input type="checkbox" id="c5"><span>Semak video paling banyak tontonan</span></label>
       </div>
     </section>
     <section class="panel" aria-label="Sejarah">
-      <span class="rail-title">Tonton semula: konten anda</span>
+      <div class="card-h"><div><h3>Sejarah konten</h3><p>Tekan untuk buka semula. Disimpan di peranti ini.</p></div></div>
       <div class="hist" id="hist"><p class="empty">Belum ada. Konten yang anda jana akan disimpan di sini.</p></div>
     </section>
   </div>
 
-  <section class="panel" aria-label="Pembuat Video" id="video">
-    <div class="out-head">
-      <h2 class="vsec-title">🎬 Pembuat Video TikTok</h2>
-      <span class="status" id="vstatus">Pilih rakaman skrin app untuk mula.</span>
-    </div>
+  <section class="panel" aria-label="Studio video" id="video">
+    <div class="card-h out-head"><div><h2>Studio video TikTok</h2><p>Video 9:16 dengan hook, sari kata ikut masa, suara dan muzik.</p></div>
+      <span class="status" id="vstatus">Pilih rakaman skrin untuk mula</span></div>
     <div class="vgrid">
       <div class="steps">
         <div class="step">
@@ -244,57 +282,70 @@ Cabaran Harian ProKuiz School ✨ 5 soalan, sekali sehari. Cuba percuma 2 hari, 
             <input type="file" id="vfile" accept="video/*"></label>
         </div>
         <div class="step">
-          <h3><span class="n">2</span>Claude tengok video dan tulis skrip</h3>
+          <h3><span class="n">2</span>Jana skrip ikut video</h3>
           <div class="chips" id="vprod">
             <button class="chip" aria-pressed="true" data-v="ProKuiz School">ProKuiz School</button>
             <button class="chip" aria-pressed="false" data-v="ProKuiz portal">ProKuiz portal</button>
             <button class="chip" aria-pressed="false" data-v="App Android ProKuiz (Shopee)">App Shopee</button>
           </div>
           <input class="inp" id="vnote" placeholder="Nota tambahan (pilihan), contoh: fokus pada Liga Negeri">
-          <button class="go" id="vscript" disabled>Jana skrip ikut video</button>
+          <button class="go" id="vscript" disabled style="align-self:flex-start">Jana skrip ikut video</button>
         </div>
         <div class="step">
-          <h3><span class="n">3</span>Semak teks (boleh ubah)</h3>
-          <label class="label" for="vhook">Hook (3 saat pertama, atas skrin)</label>
+          <h3><span class="n">3</span>Semak teks</h3>
+          <label class="label" for="vhook">Hook (3 saat pertama)</label>
           <input class="inp" id="vhook" value="Anak awak boleh jawab soalan ni?">
           <div class="seghead"><span>Mula (s)</span><span>Tamat (s)</span><span>Sari kata / skrip suara</span><span></span></div>
           <div class="segs" id="segs"></div>
           <button class="act" id="addseg" style="align-self:flex-start">+ Tambah baris</button>
-          <label class="label" for="vcta">Penutup (CTA, 2.5 saat terakhir)</label>
+          <label class="label" for="vcta">Penutup (2.5 saat terakhir)</label>
           <input class="inp" id="vcta" value="Cuba percuma 2 hari · link di bio">
           <label class="label" for="vlink">Teks pautan di penutup</label>
           <input class="inp" id="vlink" value="prokuizschool.web.app">
         </div>
         <div class="step">
           <h3><span class="n">4</span>Suara dan muzik</h3>
-          <p class="hint">Tekan 🎙 Rakam suara: video akan main tanpa bunyi, dan anda baca sari kata yang keluar. Rakaman berhenti sendiri bila video tamat, dan suara terus selari dengan video. Pakai earphone supaya bunyi lain tak masuk.</p>
+          <p class="hint">Tekan Rakam suara: video akan main tanpa bunyi dan anda baca sari kata yang keluar. Rakaman berhenti sendiri bila video tamat dan suara terus selari. Pakai earphone untuk bunyi lebih bersih.</p>
           <div class="actions"><button class="act" id="vrec" disabled>🎙 Rakam suara</button><button class="act" id="vrecplay" hidden>▶ Dengar rakaman</button></div>
           <label class="filebtn" for="vvoice">Atau pilih fail suara (MP3/M4A/WAV)<input type="file" id="vvoice" accept="audio/*"></label>
           <label class="filebtn" for="vmusic">Muzik latar (pilihan)<input type="file" id="vmusic" accept="audio/*"></label>
           <div class="vol"><label for="volv">Bunyi asal video</label><input type="range" id="volv" min="0" max="100" value="0"><output id="volvo">0%</output></div>
           <div class="vol"><label for="volvc">Suara anda</label><input type="range" id="volvc" min="0" max="100" value="100"><output id="volvco">100%</output></div>
           <div class="vol"><label for="volm">Muzik</label><input type="range" id="volm" min="0" max="100" value="25"><output id="volmo">25%</output></div>
-          <button class="act" id="vspeak" style="align-self:flex-start">🔊 Dengar skrip (suara komputer, untuk semak sahaja)</button>
+          <button class="act" id="vspeak" style="align-self:flex-start">Dengar skrip (suara komputer, untuk semakan)</button>
         </div>
       </div>
       <div class="stage">
-        <canvas id="vcanvas" width="720" height="1280"></canvas>
+        <div class="phone"><canvas id="vcanvas" width="720" height="1280"></canvas></div>
         <div class="progress"><i id="vprog"></i></div>
         <div class="actions" style="justify-content:center">
           <button class="act" id="vplay" disabled>▶ Main</button>
-          <button class="go" id="vexport" disabled>💾 Siapkan &amp; simpan video</button>
+          <button class="go" id="vexport" disabled>Siapkan &amp; simpan video</button>
         </div>
-        <p class="hint" style="text-align:center;max-width:320px">Menyiapkan video berjalan dalam masa sebenar (video 30 saat ambil 30 saat). Jangan tukar tab semasa proses.</p>
+        <p class="hint" style="text-align:center;max-width:300px">Proses berjalan ikut masa sebenar. Jangan tukar tab semasa video disiapkan.</p>
         <video id="vresult" controls playsinline hidden></video>
-        <button class="act" id="vsave" hidden>💾 Simpan semula</button>
+        <button class="act" id="vsave" hidden>Simpan semula</button>
       </div>
     </div>
   </section>
-</div>
+
+  <section class="panel" aria-label="Platform" id="platform">
+    <div class="card-h"><div><h3>Platform</h3><p>Pautan pantas ke akaun dan produk.</p></div></div>
+    <nav class="actions links">
+      <a class="act" href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">TikTok Studio</a>
+      <a class="act" href="https://business.facebook.com/latest/home" target="_blank" rel="noopener">Meta Business Suite</a>
+      <a class="act" href="https://seller.shopee.com.my/" target="_blank" rel="noopener">Shopee Seller</a>
+      <a class="act" href="https://toyyibpay.com/" target="_blank" rel="noopener">ToyyibPay</a>
+      <a class="act" href="https://prokuiz.web.app" target="_blank" rel="noopener">prokuiz.web.app</a>
+      <a class="act" href="https://prokuizschool.web.app" target="_blank" rel="noopener">prokuizschool.web.app</a>
+    </nav>
+  </section>
+</main></div>
+<footer class="gut"><div class="in">© ProKuiz · Pusat Iklan</div></footer>
+<div class="toast" id="toast" role="status"></div>
 <video id="vsrc" class="vhidden" playsinline preload="auto"></video>
 <audio id="avoice" class="vhidden" preload="auto"></audio>
 <audio id="amusic" class="vhidden" preload="auto" loop></audio>
-<div class="toast" id="toast" role="status"></div>
 
 <script>
 const BRIEF = `Anda ialah staf marketing ProKuiz (Malaysia), milik Alim. Tulis dalam Bahasa Melayu santai untuk ibu bapa Malaysia, kecuali diminta bahasa lain.
@@ -638,6 +689,16 @@ $("vexport").onclick=async()=>{
   vst("Video siap ("+(lastBlob.size/1048576).toFixed(1)+" MB, "+lastExt.toUpperCase()+").");
   saveBlob();
 };
+
+/* ringkasan */
+function stats(){
+  const h=store.get("pk-hist",[]),t=new Date().toDateString();
+  $("st-total").textContent=h.length;$("st-today").textContent=h.filter(x=>new Date(x.at).toDateString()===t).length;
+  $("st-check").textContent=document.querySelectorAll("#check input:checked").length+"/5";
+}
+const _rh=renderHist;renderHist=function(){_rh();stats()};
+document.querySelectorAll("#check input").forEach(c=>c.addEventListener("change",stats));
+stats();
 </script>
 </body>
 </html>
