@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pusat Iklan ProKuiz</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Baloo+2:wght@600;800&family=Nunito+Sans:wght@400;600;700;800&display=swap">
 <style>
-/* Layout: control desk — left column composes the request, right column holds the answer; stacks on phone */
+/* Layout: streaming-style — cinematic hero, horizontal rails of idea tiles, control desk below; stacks on phone */
 :root{
-  --bg:#0b1630; --panel:#13224a; --panel2:#1a2d5e; --line:#2a3f78;
-  --fg:#eef2ff; --muted:#9fb0d9; --gold:#ffc83d; --gold-ink:#2a1d00;
+  --bg:#111111; --panel:#1b1b1b; --panel2:#262626; --line:#303030;
+  --fg:#ffffff; --muted:#b3b3b3; --gold:#e50914; --gold-ink:#ffffff;
+  --tv:"Bebas Neue","Arial Narrow",Impact,sans-serif;
   --red:#ff5a6a; --green:#35d39a;
   --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
   --body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -21,60 +22,81 @@ body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px
 .wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
 header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:12px}
-.logo{width:46px;height:46px;border-radius:12px;background:var(--gold);color:var(--gold-ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:22px}
-h1{font-family:var(--display);font-weight:800;font-size:clamp(24px,4vw,32px);line-height:1;margin:0;text-wrap:balance}
+.logo{font-family:var(--tv);font-size:44px;line-height:1;color:var(--gold);letter-spacing:.02em}
+h1{font-family:var(--tv);font-weight:400;font-size:clamp(26px,4vw,34px);letter-spacing:.04em;line-height:1;margin:0;text-wrap:balance}
 h1 small{display:block;font-family:var(--body);font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-top:6px}
 .links{display:flex;flex-wrap:wrap;gap:8px}
-.links a{color:var(--fg);text-decoration:none;font-size:13px;font-weight:600;padding:7px 12px;border:1px solid var(--line);border-radius:999px}
-.links a:hover,.links a:focus-visible{border-color:var(--gold);color:var(--gold);outline:none}
+.links a{color:#e5e5e5;text-decoration:none;font-size:13.5px;font-weight:600;padding:6px 4px;margin-right:10px}
+.links a:hover,.links a:focus-visible{color:var(--muted);outline:none;text-decoration:underline}
+.hero{position:relative;border-radius:6px;overflow:hidden;padding:clamp(28px,6vw,64px) clamp(20px,5vw,56px);min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;
+  background:radial-gradient(120% 90% at 85% 10%,rgba(229,9,20,.55),transparent 55%),radial-gradient(80% 80% at 10% 100%,rgba(229,9,20,.18),transparent 60%),linear-gradient(180deg,#2a0507 0%,#111 100%)}
+.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(180deg,transparent,var(--bg));pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.hero .tag{display:flex;align-items:center;gap:8px;font-weight:800;font-size:12px;letter-spacing:.25em;color:#e5e5e5}
+.hero .tag b{font-family:var(--tv);font-size:26px;letter-spacing:.04em;color:var(--gold)}
+.hero h2{font-family:var(--tv);font-weight:400;font-size:clamp(46px,9vw,96px);line-height:.92;letter-spacing:.02em;margin:0;max-width:12ch;text-wrap:balance}
+.hero p{max-width:52ch;color:#e5e5e5;font-size:clamp(14px,1.8vw,17px);margin:0}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:13px;color:var(--muted)}
+.hero .meta .m{color:#46d369;font-weight:800}
+.hero .meta .box{border:1px solid #777;padding:0 6px;color:#e5e5e5}
+.hbtns{display:flex;flex-wrap:wrap;gap:10px}
+.hbtn{font:800 16px var(--body);border:0;border-radius:4px;padding:10px 22px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.hbtn.play{background:#fff;color:#000}.hbtn.play:hover{background:rgba(255,255,255,.75)}
+.hbtn.info{background:rgba(109,109,110,.7);color:#fff}.hbtn.info:hover{background:rgba(109,109,110,.45)}
+.rail-title{font-family:var(--body);font-weight:800;font-size:19px;margin:0}
 .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:18px;align-items:start}
 @media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
 .label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .field{display:flex;flex-direction:column;gap:8px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{font:600 13px var(--body);color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
+.chip[aria-pressed="true"]{background:#fff;color:#000;border-color:#fff}
 .chip:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 textarea{font:15px/1.5 var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:110px;resize:vertical;width:100%;box-sizing:border-box}
-.ideas{display:flex;flex-direction:column;gap:6px}
-.idea{all:unset;cursor:pointer;font-size:13.5px;color:var(--muted);padding:6px 0;border-bottom:1px dashed var(--line)}
-.idea:hover,.idea:focus-visible{color:var(--gold)}
-.go{font:800 17px var(--display);background:var(--gold);color:var(--gold-ink);border:0;border-radius:12px;padding:12px 18px;cursor:pointer}
+.ideas{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 12px;scrollbar-width:thin}
+.idea{all:unset;box-sizing:border-box;cursor:pointer;flex:0 0 min(200px,62%);aspect-ratio:16/9;scroll-snap-align:start;border-radius:4px;padding:12px;display:flex;align-items:flex-end;font-weight:800;font-size:14px;line-height:1.25;color:#fff;
+  background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.85)),var(--tile,linear-gradient(135deg,#7a0a10,#1f1f1f));transition:transform .2s}
+.idea:nth-child(2){--tile:linear-gradient(135deg,#0d3b66,#1f1f1f)}.idea:nth-child(3){--tile:linear-gradient(135deg,#5b2a86,#1f1f1f)}
+.idea:nth-child(4){--tile:linear-gradient(135deg,#0f5e3e,#1f1f1f)}.idea:nth-child(5){--tile:linear-gradient(135deg,#8a4b08,#1f1f1f)}
+.idea:hover,.idea:focus-visible{transform:scale(1.05);outline:2px solid #fff;outline-offset:0}
+.go{font:800 17px var(--body);background:var(--gold);color:var(--gold-ink);border:0;border-radius:4px;padding:12px 18px;cursor:pointer}
 .go[disabled]{opacity:.55;cursor:wait}
 .out-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.out-head h2{font-family:var(--display);font-size:20px;margin:0}
+.out-head h2{font-family:var(--body);font-weight:800;font-size:20px;margin:0}
 .status{font-size:12.5px;color:var(--muted)}
 .status.err{color:var(--red)}
-.output{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;min-height:260px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;font-size:15px;line-height:1.6}
+.output{background:#0a0a0a;border:1px solid var(--line);border-radius:4px;padding:16px;min-height:260px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;font-size:15px;line-height:1.6}
 .output.example{color:var(--muted)}
 .actions{display:flex;flex-wrap:wrap;gap:8px}
-.act{font:700 13.5px var(--body);color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-.act:hover{border-color:var(--gold)}
-.act.wa{border-color:var(--green)}
+.act{font:700 13.5px var(--body);color:var(--fg);background:rgba(109,109,110,.45);border:0;border-radius:4px;padding:9px 13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.act:hover{background:rgba(109,109,110,.75)}
+.act.wa{background:#1f7a46}.act.wa:hover{background:#25985a}
 .hint{font-size:12.5px;color:var(--muted);margin:0}
-.lower{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.lower{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:18px}
 @media (max-width:860px){.lower{grid-template-columns:minmax(0,1fr)}}
 .check{display:flex;flex-direction:column;gap:8px}
 .check label{display:flex;gap:10px;align-items:center;cursor:pointer}
 .check input{accent-color:var(--gold);width:18px;height:18px}
-.hist{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow:auto}
-.hitem{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:10px 12px;background:var(--panel2);border-radius:10px}
+.hist{display:flex;gap:10px;overflow-x:auto;padding:6px 2px 12px;scroll-snap-type:x mandatory}
+.hitem{all:unset;box-sizing:border-box;cursor:pointer;flex:0 0 min(220px,70%);aspect-ratio:16/9;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;padding:12px;border-radius:4px;
+  background:linear-gradient(180deg,transparent 20%,rgba(0,0,0,.9)),linear-gradient(135deg,#4a0a0e,#262626);transition:transform .2s}
+.hitem:hover,.hitem:focus-visible{transform:scale(1.05);outline:2px solid #fff}
 .hitem b{font-size:13.5px}
 .hitem span{font-size:12px;color:var(--muted)}
 .empty{font-size:13px;color:var(--muted)}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);font-weight:700;padding:10px 16px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#fff;color:#000;font-weight:700;padding:10px 16px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
-@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+@media (prefers-reduced-motion:reduce){.toast,.idea,.hitem{transition:none}.idea:hover,.hitem:hover{transform:none}}
 /* Pembuat Video */
 .vgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:18px;align-items:start}
 @media (max-width:860px){.vgrid{grid-template-columns:minmax(0,1fr)}}
-.vsec-title{font-family:var(--display);font-size:24px;margin:0}
+.vsec-title{font-family:var(--tv);font-weight:400;letter-spacing:.04em;font-size:34px;margin:0}
 .stage{display:flex;flex-direction:column;align-items:center;gap:10px}
-#vcanvas{width:100%;max-width:320px;aspect-ratio:9/16;background:#000;border-radius:14px;border:1px solid var(--line)}
+#vcanvas{width:100%;max-width:320px;aspect-ratio:9/16;background:#000;border-radius:6px;box-shadow:0 20px 60px rgba(229,9,20,.25);border:1px solid var(--line)}
 .steps{display:flex;flex-direction:column;gap:14px}
 .step{display:flex;flex-direction:column;gap:8px}
-.step h3{font-family:var(--display);font-size:16px;margin:0;display:flex;gap:8px;align-items:center}
+.step h3{font-family:var(--body);font-weight:800;font-size:16px;margin:0;display:flex;gap:8px;align-items:center}
 .step h3 .n{width:24px;height:24px;border-radius:50%;background:var(--gold);color:var(--gold-ink);display:grid;place-items:center;font-size:13px}
 .filebtn{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
 .filebtn input{font:13px var(--body);color:var(--fg);max-width:100%}
@@ -101,7 +123,7 @@ textarea{font:15px/1.5 var(--body);color:var(--fg);background:var(--bg);border:1
   <header>
     <div class="brand">
       <div class="logo">PK</div>
-      <h1>Pusat Iklan ProKuiz<small>Minta konten, salin, terus post</small></h1>
+      <h1>Pusat Iklan<small>ProKuiz · ProKuiz School</small></h1>
     </div>
     <nav class="links" aria-label="Pautan pantas">
       <a href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">TikTok Studio</a>
@@ -112,13 +134,28 @@ textarea{font:15px/1.5 var(--body);color:var(--fg);background:var(--bg);border:1
       <a href="https://prokuizschool.web.app" target="_blank" rel="noopener">prokuizschool.web.app</a>
     </nav>
   </header>
+
+  <section class="hero" aria-label="Pengenalan">
+    <span class="tag"><b>PK</b> STUDIO IKLAN</span>
+    <h2>Iklan ProKuiz Hari Ini</h2>
+    <div class="meta"><span class="m">Tahun 1 – Tingkatan 5</span><span class="box">BM | EN</span><span>TikTok · Facebook · Instagram · WhatsApp</span></div>
+    <p>Pilih produk, minta Claude tulis skrip dan caption, kemudian salin terus ke platform. Atau buat video TikTok siap dengan sari kata dan suara anda.</p>
+    <div class="hbtns"><a class="hbtn play" href="#req">▶ Jana konten</a><a class="hbtn info" href="#video">🎬 Buat video</a></div>
+  </section>
+  <h3 class="rail-title">Idea popular untuk anda</h3>
+  <div class="ideas" id="ideas">
+          <button class="idea">Konten untuk hari ini, ikut musim persekolahan semasa</button>
+          <button class="idea">Customer tanya "berapa harga dan macam mana bayar?"</button>
+          <button class="idea">Promosi percubaan percuma 2 hari ProKuiz School</button>
+          <button class="idea">Liga Negeri: cabar ibu bapa negeri lain</button>
+          <button class="idea">Arcade ProF1 sebagai ganjaran lepas belajar</button>
+        </div>
   <details class="panel" id="setpanel">
     <summary class="label" style="cursor:pointer">⚙️ Tetapan Claude (kunci API)</summary>
     <p class="hint">Website ini guna Claude melalui kunci API Anthropic anda sendiri. Dapatkan kunci di console.anthropic.com (bayaran ikut penggunaan, berasingan daripada langganan Claude). Kunci hanya disimpan dalam pelayar peranti ini, tidak dihantar ke mana-mana selain Anthropic. Jangan kongsi peranti ini atau link yang mengandungi kunci.</p>
     <div class="vol" style="grid-template-columns:minmax(0,1fr) auto auto"><input class="inp" id="apikey" type="password" placeholder="sk-ant-..." autocomplete="off"><button class="act" id="savekey">Simpan</button><button class="act" id="delkey">Padam</button></div>
     <span class="status" id="keystatus"></span>
   </details>
-
   <div class="grid">
     <section class="panel" aria-label="Permintaan">
       <div class="field">
@@ -144,16 +181,6 @@ textarea{font:15px/1.5 var(--body);color:var(--fg);background:var(--bg);border:1
       <div class="field">
         <label class="label" for="req">Apa yang anda nak?</label>
         <textarea id="req" placeholder="Contoh: buat 3 skrip TikTok tentang Cabaran Harian untuk musim cuti sekolah"></textarea>
-      </div>
-      <div class="field">
-        <span class="label">Idea pantas</span>
-        <div class="ideas" id="ideas">
-          <button class="idea">Konten untuk hari ini, ikut musim persekolahan semasa</button>
-          <button class="idea">Customer tanya "berapa harga dan macam mana bayar?"</button>
-          <button class="idea">Promosi percubaan percuma 2 hari ProKuiz School</button>
-          <button class="idea">Liga Negeri: cabar ibu bapa negeri lain</button>
-          <button class="idea">Arcade ProF1 sebagai ganjaran lepas belajar</button>
-        </div>
       </div>
       <button class="go" id="go">Jana konten</button>
     </section>
@@ -199,7 +226,7 @@ Cabaran Harian ProKuiz School ✨ 5 soalan, sekali sehari. Cuba percuma 2 hari, 
       </div>
     </section>
     <section class="panel" aria-label="Sejarah">
-      <span class="label">Sejarah (di peranti ini)</span>
+      <span class="rail-title">Tonton semula: konten anda</span>
       <div class="hist" id="hist"><p class="empty">Belum ada. Konten yang anda jana akan disimpan di sini.</p></div>
     </section>
   </div>
@@ -295,7 +322,7 @@ function single(group){group.addEventListener("click",e=>{const b=e.target.close
 single($("prod"));single($("fmt"));
 const picked = id => $(id).querySelector('[aria-pressed="true"]').dataset.v;
 
-$("ideas").addEventListener("click",e=>{const b=e.target.closest(".idea");if(!b)return;$("req").value=b.textContent;$("req").focus()});
+$("ideas").addEventListener("click",e=>{const b=e.target.closest(".idea");if(!b)return;$("req").value=b.textContent;$("req").scrollIntoView({block:"center"});$("req").focus({preventScroll:true})});
 
 function currentText(){return out.classList.contains("example")?"":out.textContent.trim()}
 function updateWA(){$("wa").href="https://wa.me/?text="+encodeURIComponent(currentText()||"Cuba ProKuiz School: https://prokuizschool.web.app")}
