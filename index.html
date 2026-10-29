@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pusat Iklan ProKuiz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito+Sans:wght@400;600;700&display=swap">
+<style>
+/* Layout: control desk — left column composes the request, right column holds the answer; stacks on phone */
+:root{
+  --bg:#0b1630; --panel:#13224a; --panel2:#1a2d5e; --line:#2a3f78;
+  --fg:#eef2ff; --muted:#9fb0d9; --gold:#ffc83d; --gold-ink:#2a1d00;
+  --red:#ff5a6a; --green:#35d39a;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:46px;height:46px;border-radius:12px;background:var(--gold);color:var(--gold-ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:22px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(24px,4vw,32px);line-height:1;margin:0;text-wrap:balance}
+h1 small{display:block;font-family:var(--body);font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-top:6px}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{color:var(--fg);text-decoration:none;font-size:13px;font-weight:600;padding:7px 12px;border:1px solid var(--line);border-radius:999px}
+.links a:hover,.links a:focus-visible{border-color:var(--gold);color:var(--gold);outline:none}
+.grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:18px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:600 13px var(--body);color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
+.chip:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+textarea{font:15px/1.5 var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:110px;resize:vertical;width:100%;box-sizing:border-box}
+.ideas{display:flex;flex-direction:column;gap:6px}
+.idea{all:unset;cursor:pointer;font-size:13.5px;color:var(--muted);padding:6px 0;border-bottom:1px dashed var(--line)}
+.idea:hover,.idea:focus-visible{color:var(--gold)}
+.go{font:800 17px var(--display);background:var(--gold);color:var(--gold-ink);border:0;border-radius:12px;padding:12px 18px;cursor:pointer}
+.go[disabled]{opacity:.55;cursor:wait}
+.out-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.out-head h2{font-family:var(--display);font-size:20px;margin:0}
+.status{font-size:12.5px;color:var(--muted)}
+.status.err{color:var(--red)}
+.output{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;min-height:260px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;font-size:15px;line-height:1.6}
+.output.example{color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.act{font:700 13.5px var(--body);color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.act:hover{border-color:var(--gold)}
+.act.wa{border-color:var(--green)}
+.hint{font-size:12.5px;color:var(--muted);margin:0}
+.lower{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+@media (max-width:860px){.lower{grid-template-columns:minmax(0,1fr)}}
+.check{display:flex;flex-direction:column;gap:8px}
+.check label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.check input{accent-color:var(--gold);width:18px;height:18px}
+.hist{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow:auto}
+.hitem{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:10px 12px;background:var(--panel2);border-radius:10px}
+.hitem b{font-size:13.5px}
+.hitem span{font-size:12px;color:var(--muted)}
+.empty{font-size:13px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);font-weight:700;padding:10px 16px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+/* Pembuat Video */
+.vgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:18px;align-items:start}
+@media (max-width:860px){.vgrid{grid-template-columns:minmax(0,1fr)}}
+.vsec-title{font-family:var(--display);font-size:24px;margin:0}
+.stage{display:flex;flex-direction:column;align-items:center;gap:10px}
+#vcanvas{width:100%;max-width:320px;aspect-ratio:9/16;background:#000;border-radius:14px;border:1px solid var(--line)}
+.steps{display:flex;flex-direction:column;gap:14px}
+.step{display:flex;flex-direction:column;gap:8px}
+.step h3{font-family:var(--display);font-size:16px;margin:0;display:flex;gap:8px;align-items:center}
+.step h3 .n{width:24px;height:24px;border-radius:50%;background:var(--gold);color:var(--gold-ink);display:grid;place-items:center;font-size:13px}
+.filebtn{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.filebtn input{font:13px var(--body);color:var(--fg);max-width:100%}
+.inp{font:14px var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:100%;box-sizing:border-box}
+.inp:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.segs{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto}
+.seg{display:grid;grid-template-columns:62px 62px minmax(0,1fr) 32px;gap:6px;align-items:center}
+.seg .inp{padding:6px 8px;font-variant-numeric:tabular-nums}
+.seg .del{all:unset;cursor:pointer;text-align:center;color:var(--muted);font-size:18px}
+.seg .del:hover{color:var(--red)}
+.seghead{display:grid;grid-template-columns:62px 62px minmax(0,1fr) 32px;gap:6px;font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.vol{display:grid;grid-template-columns:110px minmax(0,1fr) 40px;gap:8px;align-items:center;font-size:13px}
+.vol input{accent-color:var(--gold);width:100%}
+.vol output{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+.progress{height:6px;background:var(--panel2);border-radius:99px;overflow:hidden;width:100%;max-width:320px}
+.progress i{display:block;height:100%;width:0;background:var(--gold)}
+#vresult{width:100%;max-width:320px;border-radius:14px}
+.vhidden{position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">PK</div>
+      <h1>Pusat Iklan ProKuiz<small>Minta konten, salin, terus post</small></h1>
+    </div>
+    <nav class="links" aria-label="Pautan pantas">
+      <a href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">TikTok Studio</a>
+      <a href="https://business.facebook.com/latest/home" target="_blank" rel="noopener">Meta Business Suite</a>
+      <a href="https://seller.shopee.com.my/" target="_blank" rel="noopener">Shopee Seller</a>
+      <a href="https://toyyibpay.com/" target="_blank" rel="noopener">ToyyibPay</a>
+      <a href="https://prokuiz.web.app" target="_blank" rel="noopener">prokuiz.web.app</a>
+      <a href="https://prokuizschool.web.app" target="_blank" rel="noopener">prokuizschool.web.app</a>
+    </nav>
+  </header>
+  <details class="panel" id="setpanel">
+    <summary class="label" style="cursor:pointer">⚙️ Tetapan Claude (kunci API)</summary>
+    <p class="hint">Website ini guna Claude melalui kunci API Anthropic anda sendiri. Dapatkan kunci di console.anthropic.com (bayaran ikut penggunaan, berasingan daripada langganan Claude). Kunci hanya disimpan dalam pelayar peranti ini, tidak dihantar ke mana-mana selain Anthropic. Jangan kongsi peranti ini atau link yang mengandungi kunci.</p>
+    <div class="vol" style="grid-template-columns:minmax(0,1fr) auto auto"><input class="inp" id="apikey" type="password" placeholder="sk-ant-..." autocomplete="off"><button class="act" id="savekey">Simpan</button><button class="act" id="delkey">Padam</button></div>
+    <span class="status" id="keystatus"></span>
+  </details>
+
+  <div class="grid">
+    <section class="panel" aria-label="Permintaan">
+      <div class="field">
+        <span class="label">Produk</span>
+        <div class="chips" id="prod">
+          <button class="chip" aria-pressed="true" data-v="ProKuiz School">ProKuiz School</button>
+          <button class="chip" aria-pressed="false" data-v="ProKuiz portal">ProKuiz portal</button>
+          <button class="chip" aria-pressed="false" data-v="App Android ProKuiz (Shopee)">App Shopee</button>
+          <button class="chip" aria-pressed="false" data-v="Semua produk ProKuiz">Semua</button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="label">Jenis konten</span>
+        <div class="chips" id="fmt">
+          <button class="chip" aria-pressed="true" data-v="Skrip video TikTok">TikTok</button>
+          <button class="chip" aria-pressed="false" data-v="Post Facebook">Facebook</button>
+          <button class="chip" aria-pressed="false" data-v="Caption Instagram">Instagram</button>
+          <button class="chip" aria-pressed="false" data-v="Mesej broadcast WhatsApp">WhatsApp</button>
+          <button class="chip" aria-pressed="false" data-v="Balasan kepada customer">Balas customer</button>
+          <button class="chip" aria-pressed="false" data-v="Teks iklan berbayar (Meta/TikTok Ads)">Iklan berbayar</button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="req">Apa yang anda nak?</label>
+        <textarea id="req" placeholder="Contoh: buat 3 skrip TikTok tentang Cabaran Harian untuk musim cuti sekolah"></textarea>
+      </div>
+      <div class="field">
+        <span class="label">Idea pantas</span>
+        <div class="ideas" id="ideas">
+          <button class="idea">Konten untuk hari ini, ikut musim persekolahan semasa</button>
+          <button class="idea">Customer tanya "berapa harga dan macam mana bayar?"</button>
+          <button class="idea">Promosi percubaan percuma 2 hari ProKuiz School</button>
+          <button class="idea">Liga Negeri: cabar ibu bapa negeri lain</button>
+          <button class="idea">Arcade ProF1 sebagai ganjaran lepas belajar</button>
+        </div>
+      </div>
+      <button class="go" id="go">Jana konten</button>
+    </section>
+
+    <section class="panel" aria-label="Hasil">
+      <div class="out-head">
+        <h2>Hasil</h2>
+        <span class="status" id="status">Contoh di bawah. Tekan "Jana konten" untuk hasil sebenar.</span>
+      </div>
+      <div class="output example" id="out">CONTOH (bukan hasil sebenar)
+
+🎬 Hook: "Anak awak boleh jawab 5 soalan ni dalam 2 minit 30 saat?"
+
+Rakam:
+1. Buka ProKuiz School, tekan Cabaran Harian
+2. Tunjuk jam undur 2:30 berjalan
+3. Tunjuk markah dan kedudukan Top 50
+
+Caption:
+Cabaran Harian ProKuiz School ✨ 5 soalan, sekali sehari. Cuba percuma 2 hari, link di bio!
+
+#ibubapa #belajarsambilbermain #tahun6 #prokuiz</div>
+      <div class="actions">
+        <button class="act" id="copy">📋 Salin</button>
+        <a class="act" data-open="https://www.facebook.com/" href="https://www.facebook.com/" target="_blank" rel="noopener">Salin + buka FB</a>
+        <a class="act" data-open="https://www.tiktok.com/tiktokstudio/upload" href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">Salin + buka TikTok</a>
+        <a class="act" data-open="https://www.instagram.com/" href="https://www.instagram.com/" target="_blank" rel="noopener">Salin + buka IG</a>
+        <a class="act wa" id="wa" href="https://wa.me/" target="_blank" rel="noopener">Kongsi WhatsApp</a>
+      </div>
+      <p class="hint">FB, TikTok dan IG tak terima teks daripada website lain. Teks akan disalin dahulu, jadi tekan lama di kotak post dan pilih Tampal.</p>
+    </section>
+  </div>
+
+  <div class="lower">
+    <section class="panel" aria-label="Senarai semak hari ini">
+      <span class="label">Senarai semak hari ini</span>
+      <div class="check" id="check">
+        <label><input type="checkbox" id="c1"> Post 1 video TikTok</label>
+        <label><input type="checkbox" id="c2"> Post di 2 group FB ibu bapa</label>
+        <label><input type="checkbox" id="c3"> Story IG / WhatsApp</label>
+        <label><input type="checkbox" id="c4"> Balas semua inbox dan komen</label>
+        <label><input type="checkbox" id="c5"> Semak video mana paling banyak view</label>
+      </div>
+    </section>
+    <section class="panel" aria-label="Sejarah">
+      <span class="label">Sejarah (di peranti ini)</span>
+      <div class="hist" id="hist"><p class="empty">Belum ada. Konten yang anda jana akan disimpan di sini.</p></div>
+    </section>
+  </div>
+
+  <section class="panel" aria-label="Pembuat Video" id="video">
+    <div class="out-head">
+      <h2 class="vsec-title">🎬 Pembuat Video TikTok</h2>
+      <span class="status" id="vstatus">Pilih rakaman skrin app untuk mula.</span>
+    </div>
+    <div class="vgrid">
+      <div class="steps">
+        <div class="step">
+          <h3><span class="n">1</span>Pilih video</h3>
+          <label class="filebtn" for="vfile">Rakaman skrin app ProKuiz (MP4/WebM, sebaiknya 15–60 saat)
+            <input type="file" id="vfile" accept="video/*"></label>
+        </div>
+        <div class="step">
+          <h3><span class="n">2</span>Claude tengok video dan tulis skrip</h3>
+          <div class="chips" id="vprod">
+            <button class="chip" aria-pressed="true" data-v="ProKuiz School">ProKuiz School</button>
+            <button class="chip" aria-pressed="false" data-v="ProKuiz portal">ProKuiz portal</button>
+            <button class="chip" aria-pressed="false" data-v="App Android ProKuiz (Shopee)">App Shopee</button>
+          </div>
+          <input class="inp" id="vnote" placeholder="Nota tambahan (pilihan), contoh: fokus pada Liga Negeri">
+          <button class="go" id="vscript" disabled>Jana skrip ikut video</button>
+        </div>
+        <div class="step">
+          <h3><span class="n">3</span>Semak teks (boleh ubah)</h3>
+          <label class="label" for="vhook">Hook (3 saat pertama, atas skrin)</label>
+          <input class="inp" id="vhook" value="Anak awak boleh jawab soalan ni?">
+          <div class="seghead"><span>Mula (s)</span><span>Tamat (s)</span><span>Sari kata / skrip suara</span><span></span></div>
+          <div class="segs" id="segs"></div>
+          <button class="act" id="addseg" style="align-self:flex-start">+ Tambah baris</button>
+          <label class="label" for="vcta">Penutup (CTA, 2.5 saat terakhir)</label>
+          <input class="inp" id="vcta" value="Cuba percuma 2 hari · link di bio">
+          <label class="label" for="vlink">Teks pautan di penutup</label>
+          <input class="inp" id="vlink" value="prokuizschool.web.app">
+        </div>
+        <div class="step">
+          <h3><span class="n">4</span>Suara dan muzik</h3>
+          <p class="hint">Tekan 🎙 Rakam suara: video akan main tanpa bunyi, dan anda baca sari kata yang keluar. Rakaman berhenti sendiri bila video tamat, dan suara terus selari dengan video. Pakai earphone supaya bunyi lain tak masuk.</p>
+          <div class="actions"><button class="act" id="vrec" disabled>🎙 Rakam suara</button><button class="act" id="vrecplay" hidden>▶ Dengar rakaman</button></div>
+          <label class="filebtn" for="vvoice">Atau pilih fail suara (MP3/M4A/WAV)<input type="file" id="vvoice" accept="audio/*"></label>
+          <label class="filebtn" for="vmusic">Muzik latar (pilihan)<input type="file" id="vmusic" accept="audio/*"></label>
+          <div class="vol"><label for="volv">Bunyi asal video</label><input type="range" id="volv" min="0" max="100" value="0"><output id="volvo">0%</output></div>
+          <div class="vol"><label for="volvc">Suara anda</label><input type="range" id="volvc" min="0" max="100" value="100"><output id="volvco">100%</output></div>
+          <div class="vol"><label for="volm">Muzik</label><input type="range" id="volm" min="0" max="100" value="25"><output id="volmo">25%</output></div>
+          <button class="act" id="vspeak" style="align-self:flex-start">🔊 Dengar skrip (suara komputer, untuk semak sahaja)</button>
+        </div>
+      </div>
+      <div class="stage">
+        <canvas id="vcanvas" width="720" height="1280"></canvas>
+        <div class="progress"><i id="vprog"></i></div>
+        <div class="actions" style="justify-content:center">
+          <button class="act" id="vplay" disabled>▶ Main</button>
+          <button class="go" id="vexport" disabled>💾 Siapkan &amp; simpan video</button>
+        </div>
+        <p class="hint" style="text-align:center;max-width:320px">Menyiapkan video berjalan dalam masa sebenar (video 30 saat ambil 30 saat). Jangan tukar tab semasa proses.</p>
+        <video id="vresult" controls playsinline hidden></video>
+        <button class="act" id="vsave" hidden>💾 Simpan semula</button>
+      </div>
+    </div>
+  </section>
+</div>
+<video id="vsrc" class="vhidden" playsinline preload="auto"></video>
+<audio id="avoice" class="vhidden" preload="auto"></audio>
+<audio id="amusic" class="vhidden" preload="auto" loop></audio>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const BRIEF = `Anda ialah staf marketing ProKuiz (Malaysia), milik Alim. Tulis dalam Bahasa Melayu santai untuk ibu bapa Malaysia, kecuali diminta bahasa lain.
+
+PRODUK
+1. ProKuiz portal (prokuiz.web.app): kuiz pendidikan Prasekolah hingga KSSR Tahun 6 (termasuk persediaan PKSK), BM/EN. Tab Belajar, Arcade (ProF1 lumba F1, ProChess, ProSudoku, ProFighter, ProStrike) dan Pinball. Percuma: 10 item Belajar, 6 Arcade, 2 meja Pinball. Langganan penuh RM5 sebulan (ToyyibPay).
+2. ProKuiz School (prokuizschool.web.app): latihan dan exam Tahun 1 hingga Tingkatan 5, BM/EN. Peta Murid Champion Malaysia (Top 20, kedudukan Malaysia/negeri/daerah), Liga Negeri dan Liga Daerah, Cabaran Harian (5 soalan, 2 min 30 s, sekali sehari, Top 50), XP/tahap, streak 🔥, 18 lencana, aksesori avatar, 💡 Petunjuk (50:50, formula matematik), soalan ⭐ Senang/⭐⭐ Sederhana/⭐⭐⭐ Susah, skala gred A+ hingga E (gaya SPM untuk Ting 4–5), Halaman Ibu Bapa dengan graf dan Buku Soalan Salah, kad ID untuk anak log masuk sendiri, butang 🎈 rehat ke ProKuiz portal. Percubaan PERCUMA 2 hari, kemudian langganan bulanan (ToyyibPay, DuitNow QR). Jangan sebut harga tepat ProKuiz School; tulis "harga bulanan mampu milik, semak di app".
+3. App Android ProKuiz (Bijak, Intelek, IntelekPro, Iqra Junior, versi Android TV) dijual di Shopee.
+
+PERATURAN
+- Jangan reka testimoni, nama orang atau angka pengguna. Jangan dakwa "dijamin A".
+- Untuk TikTok: beri hook 3 saat, babak rakaman ringkas, caption siap guna dengan CTA, 5–8 hashtag.
+- Format ringkas, mudah dibaca di telefon. Teks biasa sahaja, tanpa markdown (tiada ** atau #  tajuk); emoji dibenarkan sedikit.
+- Terus beri konten; tanpa pengenalan atau penutup.`;
+
+let sample = null, running = null, lastText = "";
+const $ = id => document.getElementById(id);
+const out = $("out"), status = $("status"), go = $("go");
+const store = {get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),1800)}
+function setStatus(t,err){status.textContent=t;status.classList.toggle("err",!!err)}
+
+function single(group){group.addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;group.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===b?"true":"false"))})}
+single($("prod"));single($("fmt"));
+const picked = id => $(id).querySelector('[aria-pressed="true"]').dataset.v;
+
+$("ideas").addEventListener("click",e=>{const b=e.target.closest(".idea");if(!b)return;$("req").value=b.textContent;$("req").focus()});
+
+function currentText(){return out.classList.contains("example")?"":out.textContent.trim()}
+function updateWA(){$("wa").href="https://wa.me/?text="+encodeURIComponent(currentText()||"Cuba ProKuiz School: https://prokuizschool.web.app")}
+
+async function copyText(){
+  const t=currentText(); if(!t){toast("Jana konten dahulu");return false}
+  try{await navigator.clipboard.writeText(t);toast("Disalin");return true}
+  catch(e){const r=document.createRange();r.selectNodeContents(out);const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Teks dipilih. Tekan Ctrl+C / Salin");return false}
+}
+$("copy").addEventListener("click",copyText);
+document.querySelectorAll("[data-open]").forEach(a=>a.addEventListener("click",()=>{copyText()}));
+
+function renderHist(){
+  const h=store.get("pk-hist",[]), box=$("hist");
+  if(!h.length){box.innerHTML='<p class="empty">Belum ada. Konten yang anda jana akan disimpan di sini.</p>';return}
+  box.innerHTML="";
+  h.forEach(it=>{const b=document.createElement("button");b.className="hitem";const t=document.createElement("b");t.textContent=it.fmt+" · "+it.prod;const s=document.createElement("span");s.textContent=new Date(it.at).toLocaleString("ms-MY")+" · "+(it.req||"").slice(0,70);b.append(t,s);b.addEventListener("click",()=>{out.classList.remove("example");out.textContent=it.text;updateWA();setStatus("Dibuka dari sejarah")});box.append(b)});
+}
+renderHist();
+
+const today=new Date().toDateString(), saved=store.get("pk-check",{});
+if(saved.day!==today){saved.day=today;saved.v={}}
+document.querySelectorAll("#check input").forEach(c=>{c.checked=!!saved.v[c.id];c.addEventListener("change",()=>{saved.v[c.id]=c.checked;store.set("pk-check",saved)})});
+
+go.addEventListener("click",async()=>{
+  if(running)running.abort();
+  running=new AbortController();
+  const prod=picked("prod"), fmt=picked("fmt"), req=$("req").value.trim();
+  const d=new Date();
+  const prompt=`${BRIEF}
+
+Tarikh hari ini: ${d.toLocaleDateString("ms-MY",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}.
+Produk: ${prod}
+Jenis konten: ${fmt}
+Permintaan: ${req||"Sediakan konten yang paling sesuai untuk hari ini."}`;
+  go.disabled=true;out.classList.remove("example");out.textContent="";setStatus("Claude sedang menulis…");
+  try{
+    const r=await sample(prompt,{signal:running.signal,onText:({text})=>{out.textContent=text}});
+    lastText=r.text;out.textContent=r.text;updateWA();
+    setStatus(r.truncated?"Siap (dipendekkan). Minta bahagian seterusnya jika perlu.":"Siap. Salin dan post.");
+    const h=store.get("pk-hist",[]);h.unshift({at:Date.now(),prod,fmt,req,text:r.text});store.set("pk-hist",h.slice(0,30));renderHist();
+  }catch(e){
+    if(e&&e.name==="AbortError")return;
+    setStatus(errMsg(e),true);
+    if(e&&e.text){out.textContent=e.text}
+  }finally{go.disabled=false;running=null}
+});
+
+updateWA();
+
+/* ===== Claude melalui API Anthropic (kunci disimpan dalam pelayar ini sahaja) ===== */
+const MODEL="claude-sonnet-5-5";
+const getKey=()=>{try{return localStorage.getItem("pk-apikey")||""}catch(e){return""}};
+function keyUI(){const k=getKey();$("keystatus").textContent=k?"Kunci disimpan (…"+k.slice(-4)+")":"Belum ada kunci. Masukkan kunci untuk guna Claude.";$("keystatus").classList.toggle("err",!k);if(!k)$("setpanel").open=true}
+$("savekey").onclick=()=>{const v=$("apikey").value.trim();if(!v.startsWith("sk-ant-")){$("keystatus").textContent="Kunci mesti bermula dengan sk-ant-";$("keystatus").classList.add("err");return}try{localStorage.setItem("pk-apikey",v)}catch(e){}$("apikey").value="";keyUI();toast("Kunci disimpan")};
+$("delkey").onclick=()=>{try{localStorage.removeItem("pk-apikey")}catch(e){}keyUI();toast("Kunci dipadam")};
+keyUI();
+const b64=blob=>new Promise((r,j)=>{const f=new FileReader();f.onload=()=>r(String(f.result).split(",")[1]);f.onerror=j;f.readAsDataURL(blob)});
+async function callClaude(prompt,{signal,onText,images,maxTokens=4000}={}){
+  const key=getKey();if(!key)throw{code:"no_key",message:"Masukkan kunci API dalam Tetapan Claude di atas"};
+  const content=[];
+  if(images)for(const im of images)content.push({type:"image",source:{type:"base64",media_type:"image/jpeg",data:await b64(im)}});
+  content.push({type:"text",text:prompt});
+  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",signal,headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:MODEL,max_tokens:maxTokens,stream:true,messages:[{role:"user",content}]})});
+  if(!res.ok){let m="HTTP "+res.status;try{const j=await res.json();m=(j.error&&j.error.message)||m}catch(e){}throw{code:res.status===401?"bad_key":res.status===429?"rate_limited":"api_error",message:m}}
+  const rd=res.body.getReader(),dec=new TextDecoder();let buf="",text="",stop="";
+  for(;;){const {value,done}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let i;
+    while((i=buf.indexOf("\n"))>=0){const line=buf.slice(0,i).trim();buf=buf.slice(i+1);if(!line.startsWith("data:"))continue;
+      let ev;try{ev=JSON.parse(line.slice(5))}catch(e){continue}
+      if(ev.type==="content_block_delta"&&ev.delta&&ev.delta.type==="text_delta"){text+=ev.delta.text;onText&&onText({text,delta:ev.delta.text})}
+      else if(ev.type==="message_delta"&&ev.delta)stop=ev.delta.stop_reason||stop;
+      else if(ev.type==="error")throw{code:"api_error",message:(ev.error&&ev.error.message)||"ralat",text}}}
+  return{text,truncated:stop==="max_tokens"};
+}
+sample=callClaude;
+sample.json=async(prompt,opts)=>{const {text}=await callClaude(prompt,opts);const m=text.match(/\{[\s\S]*\}/);if(!m)throw{code:"bad_shape",message:"Jawapan Claude bukan JSON"};return JSON.parse(m[0])};
+function errMsg(e){const c=e&&e.code;return c==="no_key"?"Masukkan kunci API dalam ⚙️ Tetapan Claude di atas.":c==="bad_key"?"Kunci API tidak sah. Semak semula di Tetapan.":c==="rate_limited"?"Terlalu banyak permintaan. Cuba lagi sebentar.":"Tak berjaya: "+((e&&e.message)||"ralat")+". Cuba lagi."}
+
+/* ================= PEMBUAT VIDEO ================= */
+const W=720,H=1280;
+const cv=$("vcanvas"), cx=cv.getContext("2d");
+const vsrc=$("vsrc"), avoice=$("avoice"), amusic=$("amusic");
+const vst=(t,err)=>{const s=$("vstatus");s.textContent=t;s.classList.toggle("err",!!err)};
+single($("vprod"));
+let segs=[{start:3,end:7,text:"Cabaran Harian ProKuiz School: 5 soalan, 2 minit 30 saat."},{start:7,end:11,text:"Markah terus masuk ranking Top 50 seluruh Malaysia."}];
+let dur=0, playing=false, recording=false, lastBlob=null, lastExt="webm";
+
+function renderSegs(){
+  const box=$("segs");box.innerHTML="";
+  segs.forEach((s,i)=>{
+    const row=document.createElement("div");row.className="seg";
+    const a=document.createElement("input");a.className="inp";a.type="number";a.step="0.1";a.min="0";a.value=s.start;a.id="sa"+i;a.setAttribute("aria-label","Mula baris "+(i+1));
+    const b=document.createElement("input");b.className="inp";b.type="number";b.step="0.1";b.min="0";b.value=s.end;b.id="sb"+i;b.setAttribute("aria-label","Tamat baris "+(i+1));
+    const t=document.createElement("input");t.className="inp";t.value=s.text;t.id="st"+i;t.setAttribute("aria-label","Teks baris "+(i+1));
+    const d=document.createElement("button");d.className="del";d.textContent="×";d.title="Buang";
+    a.oninput=()=>{s.start=parseFloat(a.value)||0;drawAt(vsrc.currentTime)};
+    b.oninput=()=>{s.end=parseFloat(b.value)||0;drawAt(vsrc.currentTime)};
+    t.oninput=()=>{s.text=t.value;drawAt(vsrc.currentTime)};
+    d.onclick=()=>{segs.splice(i,1);renderSegs();drawAt(vsrc.currentTime)};
+    row.append(a,b,t,d);box.append(row);
+  });
+}
+renderSegs();
+$("addseg").onclick=()=>{const last=segs[segs.length-1];const st=last?last.end:3;segs.push({start:st,end:st+3,text:""});renderSegs()};
+["vhook","vcta","vlink"].forEach(id=>$(id).addEventListener("input",()=>drawAt(vsrc.currentTime)));
+
+function wrapLines(text,maxW){
+  const words=String(text||"").split(/\s+/).filter(Boolean),lines=[];let cur="";
+  for(const w of words){const test=cur?cur+" "+w:w;if(cx.measureText(test).width>maxW&&cur){lines.push(cur);cur=w}else cur=test}
+  if(cur)lines.push(cur);return lines;
+}
+function rrect(x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath()}
+const FONT='"Baloo 2","Trebuchet MS",sans-serif';
+
+function drawAt(t){
+  cx.fillStyle="#0b1630";cx.fillRect(0,0,W,H);
+  if(vsrc.readyState>=2&&vsrc.videoWidth){
+    const vw=vsrc.videoWidth,vh=vsrc.videoHeight,s=Math.max(W/vw,H/vh);
+    const dw=vw*s,dh=vh*s;cx.drawImage(vsrc,(W-dw)/2,(H-dh)/2,dw,dh);
+  }else{
+    cx.fillStyle="#9fb0d9";cx.font='600 34px '+FONT;cx.textAlign="center";cx.fillText("Pilih video di langkah 1",W/2,H/2);
+  }
+  // top shade
+  let g=cx.createLinearGradient(0,0,0,360);g.addColorStop(0,"rgba(11,22,48,.85)");g.addColorStop(1,"rgba(11,22,48,0)");cx.fillStyle=g;cx.fillRect(0,0,W,360);
+  // brand pill
+  cx.font='800 30px '+FONT;cx.textAlign="left";cx.textBaseline="middle";
+  rrect(32,40,150,52,26);cx.fillStyle="#ffc83d";cx.fill();cx.fillStyle="#2a1d00";cx.fillText("ProKuiz",54,67);
+  const D=dur||12, ctaStart=Math.max(0,D-2.5);
+  // hook
+  const hook=$("vhook").value.trim();
+  if(hook&&t<3.2){
+    const k=Math.min(1,t/0.25);cx.globalAlpha=k;
+    cx.font='800 62px '+FONT;cx.textAlign="center";
+    const ls=wrapLines(hook,W-110);const lh=70,bh=ls.length*lh+40,by=150;
+    rrect(40,by,W-80,bh,24);cx.fillStyle="rgba(255,255,255,.96)";cx.fill();
+    cx.fillStyle="#0b1630";ls.forEach((l,i)=>cx.fillText(l,W/2,by+20+lh/2+i*lh));
+    cx.globalAlpha=1;
+  }
+  // caption
+  const seg=segs.find(s=>t>=s.start&&t<s.end&&s.text.trim());
+  if(seg&&t<ctaStart){
+    cx.font='800 46px '+FONT;cx.textAlign="center";
+    const ls=wrapLines(seg.text,W-120);const lh=56,bh=ls.length*lh+32,by=H-260-bh;
+    rrect(36,by,W-72,bh,20);cx.fillStyle="rgba(11,22,48,.88)";cx.fill();
+    ls.forEach((l,i)=>{cx.fillStyle=i===0?"#ffc83d":"#ffffff";cx.fillText(l,W/2,by+16+lh/2+i*lh)});
+  }
+  // CTA end card
+  if(t>=ctaStart&&dur){
+    const k=Math.min(1,(t-ctaStart)/0.3);cx.globalAlpha=k*.9;cx.fillStyle="#0b1630";cx.fillRect(0,0,W,H);cx.globalAlpha=k;
+    cx.textAlign="center";cx.fillStyle="#ffc83d";cx.font='800 120px '+FONT;cx.fillText("ProKuiz",W/2,H/2-140);
+    cx.fillStyle="#ffffff";cx.font='800 54px '+FONT;
+    wrapLines($("vcta").value,W-100).forEach((l,i)=>cx.fillText(l,W/2,H/2+i*64));
+    const link=$("vlink").value.trim();
+    if(link){cx.font='700 36px '+FONT;const w=cx.measureText(link).width+60;rrect((W-w)/2,H/2+170,w,70,35);cx.fillStyle="#ffc83d";cx.fill();cx.fillStyle="#2a1d00";cx.fillText(link,W/2,H/2+205)}
+    cx.globalAlpha=1;
+  }
+  // progress
+  if(dur){cx.fillStyle="rgba(255,255,255,.25)";cx.fillRect(0,H-10,W,10);cx.fillStyle="#ffc83d";cx.fillRect(0,H-10,W*(t/dur),10);$("vprog").style.width=(100*t/dur)+"%"}
+}
+document.fonts&&document.fonts.ready.then(()=>drawAt(0));
+drawAt(0);
+
+$("vfile").addEventListener("change",()=>{
+  const f=$("vfile").files[0];if(!f)return;
+  stopAll();vsrc.src=URL.createObjectURL(f);vst("Memuatkan video…");
+});
+vsrc.addEventListener("loadedmetadata",()=>{dur=vsrc.duration||0;});
+vsrc.addEventListener("loadeddata",()=>{
+  vsrc.currentTime=0;drawAt(0);
+  $("vplay").disabled=false;$("vexport").disabled=false;$("vscript").disabled=false;$("vrec").disabled=false;
+  vst("Video sedia ("+dur.toFixed(1)+" s). Tekan \"Jana skrip ikut video\".");
+});
+vsrc.addEventListener("seeked",()=>{if(!playing)drawAt(vsrc.currentTime)});
+vsrc.addEventListener("error",()=>vst("Video ini tak dapat dibuka. Cuba fail MP4 lain.",true));
+$("vvoice").addEventListener("change",()=>{const f=$("vvoice").files[0];if(f){avoice.src=URL.createObjectURL(f);vst("Suara dimuatkan.")}});
+$("vmusic").addEventListener("change",()=>{const f=$("vmusic").files[0];if(f){amusic.src=URL.createObjectURL(f);vst("Muzik dimuatkan.")}});
+[["volv","volvo"],["volvc","volvco"],["volm","volmo"]].forEach(([a,b])=>$(a).addEventListener("input",()=>{$(b).textContent=$(a).value+"%";applyVol()}));
+
+/* audio graph */
+let actx=null,gV,gC,gM,dest;
+function ensureAudio(){
+  if(actx)return;
+  actx=new (window.AudioContext||window.webkitAudioContext)();
+  dest=actx.createMediaStreamDestination();
+  const mk=(el)=>{const src=actx.createMediaElementSource(el);const g=actx.createGain();src.connect(g);g.connect(actx.destination);g.connect(dest);return g};
+  gV=mk(vsrc);gC=mk(avoice);gM=mk(amusic);applyVol();
+}
+function applyVol(){if(!actx)return;gV.gain.value=$("volv").value/100;gC.gain.value=$("volvc").value/100;gM.gain.value=$("volm").value/100}
+
+let raf=0;
+function loop(){drawAt(vsrc.currentTime);if(playing)raf=requestAnimationFrame(loop)}
+async function startAll(){
+  ensureAudio();if(actx.state==="suspended")await actx.resume();
+  vsrc.currentTime=0;if(avoice.src)avoice.currentTime=0;if(amusic.src)amusic.currentTime=0;
+  playing=true;$("vplay").textContent="■ Henti";
+  const ps=[vsrc.play()];if(avoice.src)ps.push(avoice.play());if(amusic.src)ps.push(amusic.play());
+  await Promise.all(ps);loop();
+}
+function stopAll(){
+  playing=false;cancelAnimationFrame(raf);vsrc.pause();avoice.pause();amusic.pause();
+  try{speechSynthesis.cancel()}catch(e){}
+  $("vplay").textContent="▶ Main";
+}
+vsrc.addEventListener("ended",()=>{drawAt(dur);if(!recording)stopAll()});
+$("vplay").onclick=async()=>{if(recording)return;if(playing){stopAll();return}try{await startAll()}catch(e){stopAll();vst("Tak dapat main video: "+e.message,true)}};
+
+/* rakam suara (mikrofon) */
+let micRec=null;
+$("vrec").onclick=async()=>{
+  if(micRec){micRec.stop();return}
+  if(!dur){vst("Pilih video dahulu.",true);return}
+  let ms;try{ms=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(e){vst("Mikrofon tidak dibenarkan. Benarkan mikrofon untuk laman ini dalam tetapan pelayar.",true);return}
+  stopAll();const ch=[];const mt=["audio/mp4","audio/webm;codecs=opus","audio/webm"].find(m=>MediaRecorder.isTypeSupported(m))||"";
+  micRec=new MediaRecorder(ms,mt?{mimeType:mt}:{});micRec.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};
+  const oldV=$("volv").value,oldC=$("volvc").value;
+  micRec.onstop=()=>{ms.getTracks().forEach(t=>t.stop());stopAll();$("volv").value=oldV;$("volvc").value=oldC;applyVol();
+    avoice.src=URL.createObjectURL(new Blob(ch,{type:mt||"audio/webm"}));micRec=null;$("vrec").textContent="🎙 Rakam semula";$("vrecplay").hidden=false;vst("Suara dirakam. Tekan ▶ Main untuk dengar bersama video, atau terus Siapkan video.")};
+  avoice.removeAttribute("src");avoice.load();
+  ensureAudio();$("volv").value=0;$("volvc").value=0;applyVol();
+  vsrc.addEventListener("ended",function h(){vsrc.removeEventListener("ended",h);if(micRec)micRec.stop()});
+  micRec.start();$("vrec").textContent="■ Henti rakam";vst("🔴 Sedang rakam… baca sari kata di skrin.");
+  await startAll();
+};
+$("vrecplay").onclick=()=>{if(!playing)startAll()};
+
+/* browser voice preview */
+let speakTimers=[];
+$("vspeak").onclick=async()=>{
+  if(!("speechSynthesis" in window)){vst("Pelayar ini tiada suara komputer.",true);return}
+  if(!dur){vst("Pilih video dahulu.",true);return}
+  speakTimers.forEach(clearTimeout);speakTimers=[];speechSynthesis.cancel();
+  const voices=speechSynthesis.getVoices();const v=voices.find(x=>/^ms/i.test(x.lang))||voices.find(x=>/^id/i.test(x.lang));
+  const say=txt=>{const u=new SpeechSynthesisUtterance(txt);if(v){u.voice=v;u.lang=v.lang}else u.lang="ms-MY";u.rate=1.05;speechSynthesis.speak(u)};
+  await startAll();
+  const hook=$("vhook").value.trim();if(hook)say(hook);
+  segs.forEach(s=>speakTimers.push(setTimeout(()=>{if(playing)say(s.text)},s.start*1000)));
+  if(!v)vst("Tiada suara Bahasa Melayu di peranti ini, jadi bunyi mungkin pelat. Ini untuk semak masa sahaja.");
+};
+
+/* frames → Claude */
+function seekTo(t){return new Promise(r=>{const h=()=>{vsrc.removeEventListener("seeked",h);r()};vsrc.addEventListener("seeked",h);vsrc.currentTime=t})}
+async function grabFrames(){
+  const n=Math.max(3,Math.min(8,Math.round(dur/4)));const c=document.createElement("canvas");c.width=360;c.height=640;const x=c.getContext("2d");
+  const out=[],times=[];
+  for(let i=0;i<n;i++){
+    const t=dur*(i+0.5)/n;await seekTo(t);
+    const vw=vsrc.videoWidth,vh=vsrc.videoHeight,s=Math.max(360/vw,640/vh);x.fillStyle="#000";x.fillRect(0,0,360,640);
+    x.drawImage(vsrc,(360-vw*s)/2,(640-vh*s)/2,vw*s,vh*s);
+    out.push(await new Promise(r=>c.toBlob(r,"image/jpeg",0.72)));times.push(t);
+  }
+  await seekTo(0);return{blobs:out,times};
+}
+$("vscript").onclick=async()=>{
+  if(!dur)return;stopAll();
+  const btn=$("vscript");btn.disabled=true;vst("Mengambil gambar daripada video…");
+  try{
+    const {blobs,times}=await grabFrames();
+    vst("Claude sedang tengok video dan menulis skrip… (boleh ambil 30–90 saat)");
+    const prod=picked("vprod"),note=$("vnote").value.trim();
+    const prompt=`${BRIEF}
+
+TUGAS: Tulis skrip suara dan sari kata untuk video iklan TikTok (9:16). Gambar yang dilampirkan ialah babak daripada video, mengikut turutan, pada saat: ${times.map(t=>t.toFixed(1)+"s").join(", ")}. Panjang video: ${dur.toFixed(1)} saat.
+Produk: ${prod}. ${note?"Nota daripada Alim: "+note:""}
+
+Peraturan skrip:
+- "hook": ayat pendek (maks 8 patah perkataan) untuk 3 saat pertama, dipaparkan besar di atas skrin.
+- "lines": baris sari kata/suara yang ikut apa yang berlaku dalam babak. Baris pertama mula pada 3.0 s. Baris terakhir mesti tamat sebelum ${Math.max(3,dur-2.5).toFixed(1)} s (selepas itu kad penutup). Setiap baris 2–5 saat, maksimum kira-kira 2.5 patah perkataan sesaat supaya sempat dibaca dengan suara. Jangan bertindih.
+- "cta": ayat penutup pendek (maks 8 patah perkataan).
+- "link": ${prod==="ProKuiz portal"?'"prokuiz.web.app"':prod.startsWith("App")?'"Cari ProKuiz di Shopee"':'"prokuizschool.web.app"'}
+- Huraikan hanya apa yang benar-benar kelihatan dalam gambar dan ciri produk yang disenaraikan.
+
+Balas JSON SAHAJA, tanpa teks lain: {"hook":"...","lines":[{"start":3.0,"end":6.5,"text":"..."}],"cta":"...","link":"..."}`;
+    const data=await sample.json(prompt,{images:blobs});
+    if(!data||!Array.isArray(data.lines))throw{code:"bad_shape",message:"Jawapan Claude tidak lengkap"};
+    $("vhook").value=data.hook||"";$("vcta").value=data.cta||"";if(data.link)$("vlink").value=data.link;
+    segs=data.lines.map(l=>({start:+l.start||0,end:+l.end||0,text:String(l.text||"")})).filter(s=>s.end>s.start);
+    renderSegs();drawAt(0);
+    vst("Skrip siap. Tekan ▶ Main untuk tengok, kemudian rakam suara sambil baca sari kata.");
+  }catch(e){
+    vst(errMsg(e),true);
+  }finally{btn.disabled=false}
+};
+
+/* export */
+function pickMime(){
+  const c=["video/mp4;codecs=avc1.42E01E,mp4a.40.2","video/mp4","video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm"];
+  for(const m of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(m))return m}return"";
+}
+function saveBlob(){
+  if(!lastBlob)return;
+  const a=document.createElement("a");a.href=URL.createObjectURL(lastBlob);
+  a.download="prokuiz-iklan-"+new Date().toISOString().slice(0,16).replace(/[:T]/g,"-")+"."+lastExt;
+  document.body.append(a);a.click();a.remove();vst("Video disimpan ke folder Downloads. Upload ke TikTok, Reels atau FB.");
+}
+$("vsave").onclick=saveBlob;
+$("vexport").onclick=async()=>{
+  if(recording||!dur)return;
+  if(!window.MediaRecorder||!cv.captureStream){vst("Pelayar ini tak boleh buat video. Cuba Chrome atau Edge terkini.",true);return}
+  stopAll();ensureAudio();if(actx.state==="suspended")await actx.resume();
+  const mime=pickMime();lastExt=mime.includes("mp4")?"mp4":"webm";
+  const stream=new MediaStream([...cv.captureStream(30).getVideoTracks(),...dest.stream.getAudioTracks()]);
+  const rec=new MediaRecorder(stream,mime?{mimeType:mime,videoBitsPerSecond:6e6}:{videoBitsPerSecond:6e6});
+  const chunks=[];rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+  recording=true;$("vexport").disabled=true;$("vplay").disabled=true;vst("Sedang menyiapkan video… jangan tukar tab.");
+  const done=new Promise(r=>rec.onstop=r);
+  rec.start(500);
+  try{await startAll()}catch(e){rec.stop();recording=false;$("vexport").disabled=false;$("vplay").disabled=false;vst("Tak dapat main video: "+e.message,true);return}
+  await new Promise(r=>{const h=()=>{vsrc.removeEventListener("ended",h);r()};vsrc.addEventListener("ended",h)});
+  drawAt(dur);await new Promise(r=>setTimeout(r,300));
+  rec.stop();await done;stopAll();recording=false;$("vexport").disabled=false;$("vplay").disabled=false;
+  lastBlob=new Blob(chunks,{type:mime||"video/webm"});
+  const rv=$("vresult");rv.src=URL.createObjectURL(lastBlob);rv.hidden=false;$("vsave").hidden=false;
+  vst("Video siap ("+(lastBlob.size/1048576).toFixed(1)+" MB, "+lastExt.toUpperCase()+").");
+  saveBlob();
+};
+</script>
+</body>
+</html>
